@@ -4,11 +4,10 @@ import './App.css';
 
 import uuidv4 from 'uuid/v4'
 
-window.Regate = window.Regate || {}
-window.Regate.Text = window.Regate.Text || {}
+const _RegateText = {}
 
-window.Regate.Text.init = function ({
-  uniqueId,
+_RegateText.init = function ({
+  id,
   name,
   value,
   isRequired,
@@ -16,9 +15,16 @@ window.Regate.Text.init = function ({
   onInitialized,
   onChange,
 }) {
-  var _container = document.getElementById(uniqueId)
-  var _input = _container.querySelector('[data-role=input]')
-  
+
+  if (id === undefined)
+    throw new Error("id is required")
+
+  var _container = document.getElementById(id)
+  _container.insertAdjacentHTML('afterend', _RegateText.markup(id))
+  _container.parentNode.removeChild(_container)
+
+  var _input = document.getElementById(id + '__input')
+
   _input.name = name
 
   if (isRequired === true)
@@ -39,62 +45,51 @@ window.Regate.Text.init = function ({
   }
 
   if (typeof onChange === typeof Function) {
-      _input.oninput = () => {
-        const value = _input.value
+    _input.oninput = () => {
+      const value = _input.value
 
-        const isValid = isRequired
-          ? value !== undefined && value.length > 0
-          : true
+      const isValid = isRequired
+        ? value !== undefined && value.length > 0
+        : true
 
-        onChange({value, isValid})
-      }
+      onChange({value, isValid})
+    }
   }
 }
 
 
-window.Regate.Text.markup = (shouldWrite) => {
-  const markup = `
-    <input
-      data-role='input'
-      type='text'
-      class='form-control'
-    />
-  `
+_RegateText.markup = (id) => `
+  <input
+    id='${id}__input'
+    type='text'
+    class='form-control'
+  />
+`
 
-  if (shouldWrite) {
-    document.write(markup)
-  }
-
-  return markup
-}
 
 
 class RegateText extends Component {
   constructor(props) {
     super(props)
 
-    this._uniqueId = uuidv4()
+    this._uniqueId = 'RegateText__' + this.props.name + '__' + uuidv4()
   }
 
   componentDidMount() {
     const {onChange, onInitialized} = this.props
 
-    window.Regate.Text.init({
-      uniqueId: this._uniqueId,
-      name: 'title',
-      value: 'mojtaba',
+    _RegateText.init({
+      id: this._uniqueId,
+      name: this.props.name,
+      value: this.props.value,
       onChange: onChange && onChange.bind(this),
       onInitialized: onInitialized && onInitialized.bind(this),
     })
-    
   }
 
   render() {
     return(
-      <span
-        id={this._uniqueId}
-        dangerouslySetInnerHTML={{__html: window.Regate.Text.markup()}}
-      ></span>
+      <template id={this._uniqueId}></template>
     )
   }
 }
@@ -103,12 +98,10 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { text: '' }
+    this.state = { text: 'default state' }
   }
 
   onChange = ({ value }) => {
-    console.log(value)
-    console.log(this)
     this.setState({ text: value })
   }
 
@@ -132,12 +125,6 @@ class App extends Component {
           />
 
           <div><b>{ this.state.text }</b></div>
-
-
-          <RegateText
-            name="Title"
-            value="mojtaba2"
-          />
 
           <button type="submit">SUBMIT</button>
         </form>
