@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import uuidv4 from 'uuid/v4'
+
 window.Regate = window.Regate || {}
 window.Regate.Text = window.Regate.Text || {}
 
@@ -70,6 +72,8 @@ window.Regate.Text.markup = (shouldWrite) => {
 class RegateText extends Component {
   constructor(props) {
     super(props)
+
+    this._uniqueId = uuidv4()
   }
 
   onChange({value, isValid}) {
@@ -80,19 +84,23 @@ class RegateText extends Component {
   componentDidMount() {
     const {onChange, onInitialized} = this.props
 
+
     window.Regate.Text.init({
-      uniqueId: 'salam',
+      uniqueId: this._uniqueId,
       name: 'title',
       value: 'mojtaba',
-      onChange: onChange.bind(this),
-      onInitialized: onInitialized.bind(this),
+      onChange: onChange && onChange.bind(this),
+      onInitialized: onInitialized && onInitialized.bind(this),
     })
     
   }
 
   render() {
     return(
-      <span id="salam" dangerouslySetInnerHTML={{__html: window.Regate.Text.markup()}}></span>
+      <span
+        id={this._uniqueId}
+        dangerouslySetInnerHTML={{__html: window.Regate.Text.markup()}}
+      ></span>
     )
   }
 }
@@ -130,6 +138,12 @@ class App extends Component {
           />
 
           <div><b>{ this.state.text }</b></div>
+
+
+          <RegateText
+            name="Title"
+            value="mojtaba2"
+          />
 
           <button type="submit">SUBMIT</button>
         </form>
