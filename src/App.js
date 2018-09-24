@@ -76,14 +76,8 @@ class RegateText extends Component {
     this._uniqueId = uuidv4()
   }
 
-  onChange({value, isValid}) {
-    console.log(value)
-    console.log(this)
-  }
-
   componentDidMount() {
     const {onChange, onInitialized} = this.props
-
 
     window.Regate.Text.init({
       uniqueId: this._uniqueId,
