@@ -41,12 +41,12 @@ class App extends Component {
             name="Title"
             value={this.state.text}
             onChange={this.onChange}
-            onInitialized={this.onChange}
           />
 
-          <div><b>{this.state.text}</b></div>
+          <div style={{textAlign: 'left'}}>
+            <pre>{JSON.stringify(this.state, null, 2)}</pre>
+          </div>
 
-          <button type="submit">SUBMIT</button>
         </form>
       </div>
     );
