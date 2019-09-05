@@ -15,13 +15,17 @@ export class RegateCurrency extends Component {
         this.onChange = this.onChange.bind(this);
         this.state = {
             beautifiedValue: this._beautifiedValue(this.props.value)
-        }
+        };
+
+        this.inputRef = React.createRef();
     }
 
     componentDidMount() {
         if (this.props.onInitialize) {
+            const normalizedValue = this._normalizedValue(this.props.value);
+
             this.props.onInitialize({
-                value: this.props.value,
+                value: normalizedValue,
                 isValid: this._isValid()
             })
         }
@@ -43,7 +47,7 @@ export class RegateCurrency extends Component {
     }
 
     _normalizedValue(value) {
-        return value.split('').filter(char => {
+        return value.toString().split('').filter(char => {
             return !isNaN(parseInt(char, 10));
         }).join('')
     }
@@ -64,6 +68,11 @@ export class RegateCurrency extends Component {
         console.log('normalizedValue', normalizedValue);
         console.log(e, e.nativeEvent);
 
+        // const oSel = e.nativeEvent.target.selectionStart;
+        // console.log(oSel);
+        // this.inputRef.current.selectionStart = 2;
+        // this.inputRef.current.selectionEnd = 3;
+
         this.props.onChange({
             value: normalizedValue,
             isValid: this._isValid(normalizedValue)
@@ -73,8 +82,12 @@ export class RegateCurrency extends Component {
     render() {
         return <div>
             <input
+                ref={this.inputRef}
                 type="text"
+                // inputMode="numeric"
+                pattern="[0-9]*"
                 value={this.state.beautifiedValue}
+                // value={this.props.value}
                 onChange={this.onChange}
                 {...this.props.inputProps}
             />

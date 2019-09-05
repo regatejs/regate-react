@@ -10,6 +10,7 @@ class MyComponent extends Component {
         this.onChange = this.onChange.bind(this);
         this.state = {
             inputClass: 'untouched',
+            style: { },
             value: 1000
         }
     }
@@ -19,6 +20,7 @@ class MyComponent extends Component {
         // console.log(isValid);
         this.setState({
             inputClass: isValid ? 'success' : 'error',
+            style: isValid ? { border: '1px solid green' } : { border: '1px solid red' },
             value
         })
     }
@@ -32,10 +34,13 @@ class MyComponent extends Component {
                 value={this.state.value}
                 onInitialize={this.onChange}
                 onChange={this.onChange}
-                inputProps={{className: this.state.inputClass}}
+                inputProps={{
+                    className: this.state.inputClass
+                    // style: this.state.style
+                }}
             />
 
-            {this.state.value}
+            The real value is: {this.state.value}
         </div>;
     }
 }
