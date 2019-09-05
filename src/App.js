@@ -15,8 +15,8 @@ class MyComponent extends Component {
     }
 
     onChange({value, isValid}) {
-        console.log(value);
-        console.log(isValid);
+        // console.log(value);
+        // console.log(isValid);
         this.setState({
             inputClass: isValid ? 'success' : 'error',
             value
@@ -24,14 +24,19 @@ class MyComponent extends Component {
     }
 
     render() {
-        return <RegateCurrency
-            min={5000}
-            max={9000}
-            value={this.state.value}
-            onInitialize={this.onChange}
-            onChange={this.onChange}
-            inputProps={{className: this.state.inputClass}}
-        />
+        return <div>
+            <RegateCurrency
+                min={5000}
+                max={9000}
+                separator=','
+                value={this.state.value}
+                onInitialize={this.onChange}
+                onChange={this.onChange}
+                inputProps={{className: this.state.inputClass}}
+            />
+
+            {this.state.value}
+        </div>;
     }
 }
 
