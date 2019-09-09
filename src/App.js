@@ -34,6 +34,7 @@ class MyComponent extends Component {
                 value={this.state.value}
                 onInitialize={this.onChange}
                 onChange={this.onChange}
+                currency='kr'
                 inputProps={{
                     className: this.state.inputClass
                     // style: this.state.style
